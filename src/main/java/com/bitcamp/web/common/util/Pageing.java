@@ -1,4 +1,4 @@
-package com.bitcamp.web.common;
+package com.bitcamp.web.common.util;
 
 import java.util.Map;
 

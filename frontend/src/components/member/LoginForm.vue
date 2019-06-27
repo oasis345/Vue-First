@@ -14,7 +14,10 @@
       <label><input type="checkbox"> Remember me</label>
     </div>
     <button type="submit" class="btn btn-default">Submit</button>
-    <div @click="submitBtn" class="btn btn-default">임시 로그인</div>
+    <button @click="get" class="btn btn-default">조 회</button>
+    <button @click="post" class="btn btn-default">입 력</button>
+    <button @click="put" class="btn btn-default">수 정</button>
+    <button @click="del" class="btn btn-default">삭 제</button>
   </form>
   <Footer></Footer>
 </div>
@@ -31,25 +34,56 @@ export default {
   },
   data(){
     return {
-      posts: []
+      
     }
 
   },
   methods:{
-    //가짜 API를 통해 정보를 수정한 흉내를 냄
-    //실제 웹 애플리케이션에서는 서버에 post 요청을 보내는 부분임
-    submitBtn: function(){
+
+    get: function(){   //왼쪽 get , post 등이 위에 클릭이름 함수명
         alert('안녕하세요e');
-        axios.get('/customers/count')
-        .then((xhr) =>
+        axios.get('/customers/count')  // 엑시오스 옆에.get.post,put,delete가 실제 crud 정의어
+        .then(d =>
         {
-          console.log(xhr.data);
-          this.posts = xhr.data; //따로 변경이없이 바로 변수명에 들어와서.data로출력함
+          console.log(d.data);
+          alert(d.data);
         })
         .catch((e)=>{
             alert('에러')
         }) 
+    },
+
+    post: ()=>{
+        axios.post('')
+        .then(d=>
+        {
+          alert(`포스트 연동 성공 : ${d.data.result}`)
+        })
+          .catch((e)=>{
+            alert('에러')
+        }) 
+    },
+
+    put: ()=>{
+      axios.put('/customers/id')
+      .then(d=>{
+        alert(`put 연동 성공: ${d.data.result}`)
+      })
+      .catch((e)=>{
+            alert('에러')
+        }) 
+    },
+
+    del: ()=>{
+      axios.delete('/customers/id')
+      .then(d=>{
+        alert(`DEL 연동 성공: ${d.data.result}`)
+      })
+      .catch((e)=>{
+            alert('에러')
+        }) 
     }
+
   }
 }
 </script>

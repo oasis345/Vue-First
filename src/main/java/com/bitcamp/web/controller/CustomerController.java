@@ -1,9 +1,8 @@
 package com.bitcamp.web.controller;
-import java.util.HashMap;
-import java.util.List;
-import java.util.function.Consumer;
 
-import com.bitcamp.web.common.PageProxy;
+import java.util.HashMap;
+
+import com.bitcamp.web.common.util.Printer;
 import com.bitcamp.web.domain.CustomerDTO;
 import com.bitcamp.web.service.CustomerService;
 
@@ -15,67 +14,75 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-
 @RestController
-@RequestMapping(value="/customers")
+@RequestMapping("/customers")
 public class CustomerController {
-    // @Autowired CustomerDTO customer;
-    // @Autowired CustomerService customerService;
-    // @Autowired PageProxy pageProxy;
+    @Autowired CustomerService customerService;
+    @Autowired CustomerDTO customer;
+    @Autowired Printer p;
+    
+   
 
-    // @GetMapping(value="/{customer_Id}/{password}")
-    // public CustomerDTO login(@PathVariable("customer_Id")String customer_Id,
-    //                         @PathVariable("password")String password) {
-    //     return customerService.login(customer_Id, password);
-    // }
+    @PostMapping("/post/")
+    public HashMap<String,Object> join(@RequestBody CustomerDTO param){
+        HashMap<String,Object> map = new HashMap<>();
+        p.accept("POST 진입 ");
+        map.put("result", "SUCCESS");
+        return map; 
+    }
 
-    @GetMapping(value="/count")
+    @GetMapping("/page/{pageNum}")
+    public HashMap<String, Object> list(@PathVariable String pageNum){
+       HashMap<String, Object> map = new HashMap<>();
+       
+       return map;
+    }
+
+    @GetMapping("/get/count")   
     public String count() {
-        // return customerService.count() + "";
-        System.out.println("들어옴");
+        System.out.println("CustomerController count() 경로로 들어옴");
+        int count = customerService.countAll();
+        
         return "100";
     }
 
-    // @PostMapping(value="/join")
-    // public HashMap<?, ?> requestMethodName(@RequestBody CustomerDTO params) {
-    //     customerService.addCustomer(params);
-    //     HashMap<String, Object> map = new HashMap<>();
-    //     map.clear();
-    //     map.put("result", "SUCCESS");
-    //     return map;
-    // }
+    @GetMapping("/get/{customerId}/{password}")
+    public CustomerDTO login(@PathVariable("customerId")String id,
+                        @PathVariable("password")String pass){
+        CustomerDTO a = new 
+                CustomerDTO();
+        customer.setCustomerId(id);
+        customer.setPassword(pass);
+        return customerService.login(customer);
+    }
 
-    // @GetMapping(value="/list/{pageNum}")
-    // public HashMap<String, Object> list(@PathVariable("pageNum") String pageNum) {
-    //     HashMap<String, Object> map = new HashMap<>();
-    //     map.put("totalCount", customerService.count());
-    //     map.put("page_num", pageNum);
-    //     pageProxy.execute(map);
-    //     map.put("list", customerService.findCustomers(pageProxy));
-    //     map.put("pxy", pageProxy);
-    //     return map;
-    // }
+   
+    @GetMapping("/get/{customerId}")
+    public CustomerDTO getCustomer(@PathVariable String customerId) {
+        HashMap<String,Object> map = new HashMap<>();
+        p.accept("Get 진입 "+customerId);
+        customer.setCustomerId("hong");
+        customer.setCustomerName("이을용");
+        return customer; 
+    }
 
-    // @GetMapping(value="/{customer_Id}")
-    // public CustomerDTO customerFindId(@PathVariable("customer_Id")String customer_Id) {
-    //     return customerService.findCustomerByCustomerId(customer_Id);
-    // }
+    @PutMapping("/{customerId}")
+    public HashMap<String,Object> updateCustomer(@PathVariable String customerId) {
+        HashMap<String,Object> map = new HashMap<>();
+        p.accept("PUT 진입: "+customerId);
+        map.put("result","SUCCESS");
+        return map;
+    }
 
-    // @PutMapping(value="/modify")
-    // public CustomerDTO customerModify(@RequestBody CustomerDTO customer) {
-    //     customerService.updateCustomer(customer);
-    //     return customerService.findCustomerByCustomerId(customer.getCustomer_Id());
-    // }
-
-    // @DeleteMapping(value="/{customer_Id}")
-    // public HashMap<?, ?> customerLeave(@PathVariable("customer_Id")String customer_Id) {
-    //     customerService.deleteCustomer(customer_Id);
-    //     HashMap<String, Object> map = new HashMap<>();
-    //     map.put("result", "탈퇴 성공");
-    //     return map;
-    // }
-    
-    
+    @DeleteMapping("/{customerId}")
+    public HashMap<String,Object> deleteCustomer(@PathVariable String customerId) {
+        HashMap<String, Object> map = new HashMap<>();
+        p.accept("DELETE 진입: "+customerId);
+        customer.setCustomerId(customerId);
+        map.put("result","SUCCESS");
+        return map;
+    }
 }
